@@ -1321,6 +1321,64 @@
             closeCart();
         }
     });
-</script>
+    // ===== ОТПРАВКА В МАХ =====
+    function sendOrderToMax() {
+        const name = document.getElementById('clientName').value.trim();
+        const phone = document.getElementById('clientPhone').value.trim();
+        const address = document.getElementById('clientAddress').value.trim();
+        const wishes = document.getElementById('clientWishes').value.trim();
+
+        if (!name || !phone || !address) {
+            alert('⚠️ Пожалуйста, заполните имя, телефон и адрес доставки!');
+            return;
+        }
+
+        if (cart.length === 0) {
+            alert('⚠️ Корзина пуста! Добавьте блюда.');
+            return;
+        }
+
+        let orderLines = [];
+        cart.forEach(item => {
+            orderLines.push(item.name + ' x' + item.qty + ' = ' + (item.price * item.qty) + ' ₽');
+        });
+
+        let orderText = 
+            '🍔 ЗАКАЗ (Бургеры & Бутерброды)\n\n' +
+            '👤 Имя: ' + name + '\n' +
+            '📞 Телефон: ' + phone + '\n' +
+            '🏠 Адрес: ' + address + '\n\n' +
+            '📋 Блюда:\n' + orderLines.join('\n') + '\n\n' +
+            '💰 Итого: ' + getTotal() + ' ₽\n\n' +
+            '💳 50% предоплата переводом на карту, остаток при получении\n' +
+            '⏰ Доставка: 9:00–12:00 (согласуем время)\n';
+
+        if (wishes) {
+            orderText += '\n📝 Пожелания: ' + wishes + '\n';
+        }
+
+        orderText += '\n✨ Спасибо за заказ! Ждём подтверждения.';
+
+        // ТВОЙ ID МЕНЕДЖЕРА МАХ (уже правильный!)
+        const MAX_BOT_ID = 'f9LHodD0cOL-2PdrVpom9QkHt7tcVrvJBNtDX74nJlN2TeQe9LQdy9KXRKg';
+
+        const encodedText = encodeURIComponent(orderText);
+        const maxUrl = 'https://max.ru/u/' + MAX_BOT_ID + '?text=' + encodedText;
+
+        console.log('📤 Ссылка для отправки:', maxUrl);
+
+        window.open(maxUrl, '_blank');
+
+        showNotification('✅ Заказ отправлен в МАХ!');
+
+        cart = [];
+        updateCartUI();
+        closeCart();
+
+        document.getElementById('clientName').value = '';
+        document.getElementById('clientPhone').value = '';
+        document.getElementById('clientAddress').value = '';
+        document.getElementById('clientWishes').value = '';
+    }</script>
 </body>
 </html>
