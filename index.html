@@ -1241,7 +1241,7 @@
         const encodedText = encodeURIComponent(orderText);
         const maxUrl = 'https://max.ru/u/' + MAX_BOT_ID + '?text=' + encodedText;
 
-        window.open(maxUrl, '_blank');
+        window.location.href = maxUrl;
 
         showNotification('✅ Заказ отправлен в МАХ!');
 
